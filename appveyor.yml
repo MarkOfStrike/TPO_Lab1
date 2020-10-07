@@ -16,7 +16,7 @@ install:
   - cargo -vV
 
 # Выключаем стандартный сборщик AppVeyor
-build: false
+build: true
 
 # Используем специальный тестовый скрипт
 test_script:
