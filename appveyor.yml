@@ -2,7 +2,7 @@ os: Visual Studio 2019
 
 configuration: Debug
 
-before-buld:
+before_buld:
   -nuget restore
 
 build:
