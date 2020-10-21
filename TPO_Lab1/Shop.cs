@@ -5,11 +5,6 @@ namespace TPO_Lab1
     public class Shop
     {
         /// <summary>
-        /// Общая сумма для покупок
-        /// </summary>
-        public int MySum { get; set; }
-
-        /// <summary>
         /// Имеющиеся продукты
         /// </summary>
         private Dictionary<string, Product> Products { get; set; }
@@ -24,24 +19,8 @@ namespace TPO_Lab1
         /// </summary>
         public Shop()
         {
-            MySum = 1000;
             Products = new Dictionary<string, Product>();
             HowSold = new Dictionary<string, Product>();
-
-            Products.Add("Хлеб", new Product { CoutProduct = 25, Price = 20 });
-            Products.Add("Майонез", new Product { CoutProduct = 36, Price = 50 });
-            Products.Add("Колбаса", new Product { CoutProduct = 60, Price = 250 });
-            Products.Add("Сыр", new Product { CoutProduct = 14, Price = 150 });
-            Products.Add("Зубная паста", new Product { CoutProduct = 15, Price = 70 });
-            Products.Add("Вино", new Product { CoutProduct = 10, Price = 400 });
-            Products.Add("Пиво", new Product { CoutProduct = 30, Price = 100 });
-            Products.Add("Шампунь", new Product { CoutProduct = 25, Price = 190 });
-
-            foreach (var item in Products.Keys)
-            {
-                HowSold.Add(item, new Product { CoutProduct = 0, Price = 0});
-            }
-
         }
 
         /// <summary>
@@ -50,33 +29,32 @@ namespace TPO_Lab1
         /// <param name="name">наименование товара</param>
         /// <param name="count">Количество</param>
         /// <returns>Результат покупки</returns>
-        public string Buy(string name, int count)
+        public int Buy(string name, int count)
         {
             if (!Products.ContainsKey(name))
             {
-                return "Продукта не существует!";
+                return -1;
             }
 
             var product = Products[name];
 
             int price = product.Price * count;
 
-            if (price > MySum)
+            if (product.CoutProduct < count)
             {
-                return "Недостаточно средст для покупки";
+                return 0;
             }
             else
             {
                 product.CoutProduct -= count;
                 Products[name] = product;
-                MySum -= price;
 
                 var soldProd = HowSold[name];
                 soldProd.CoutProduct += count;
                 soldProd.Price += price;
                 HowSold[name] = soldProd;
 
-                return "Продано";
+                return price;
             }
 
         }
@@ -133,7 +111,11 @@ namespace TPO_Lab1
         public void NewProduct(string name, Product product)
         {
             if (!Products.ContainsKey(name))
+            {
                 Products.Add(name, product);
+                HowSold.Add(name, new Product {CoutProduct = 0, Price=0 });
+            }
+                
         }
 
         /// <summary>
@@ -143,7 +125,11 @@ namespace TPO_Lab1
         public void DeleteProduct(string name)
         {
             if (Products.ContainsKey(name))
+            {
                 Products.Remove(name);
+                HowSold.Remove(name);
+            }
+                
         }
 
         /// <summary>

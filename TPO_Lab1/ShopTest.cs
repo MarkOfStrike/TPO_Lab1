@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+
+using NUnit.Framework;
 
 namespace TPO_Lab1
 {
@@ -11,27 +13,39 @@ namespace TPO_Lab1
         public void InitTest()
         {
             shop = new Shop();
+            Dictionary<string, Product> products = new Dictionary<string, Product>();
+            products.Add("Хлеб", new Product { CoutProduct = 25, Price = 20 });
+            products.Add("Майонез", new Product { CoutProduct = 36, Price = 50 });
+            products.Add("Колбаса", new Product { CoutProduct = 60, Price = 250 });
+            products.Add("Сыр", new Product { CoutProduct = 14, Price = 150 });
+            products.Add("Зубная паста", new Product { CoutProduct = 15, Price = 70 });
+            products.Add("Вино", new Product { CoutProduct = 10, Price = 400 });
+            products.Add("Пиво", new Product { CoutProduct = 30, Price = 100 });
+            products.Add("Шампунь", new Product { CoutProduct = 25, Price = 190 });
+
+            foreach (var item in products)
+            {
+                shop.NewProduct(item.Key, item.Value);
+            }
         }
 
 
         [Test]
         public void TestBuy()
         {
-            Assert.AreEqual(1000, shop.MySum);
-            Assert.AreEqual("Продано", shop.Buy("Майонез", 2));
+            Assert.AreEqual(100, shop.Buy("Майонез", 2));
             Assert.AreEqual(34, shop.Remainder("Майонез").CoutProduct);
-            Assert.AreEqual(900, shop.MySum);
 
         }
 
         [Test]
         public void TestNotBuy()
         {
-            Assert.AreEqual("Продукта не существует!", shop.Buy("yfgshjjab", 2));
-            Assert.AreEqual("Недостаточно средст для покупки", shop.Buy("Майонез", 100));
+            Assert.AreEqual(-1, shop.Buy("yfgshjjab", 2));
+            Assert.AreEqual(0, shop.Buy("Майонез", 100));
         }
 
-        
+
         [Test]
         public void TestBring()
         {
@@ -67,7 +81,7 @@ namespace TPO_Lab1
         [Test]
         public void TestNewProduct()
         {
-            shop.NewProduct("Апельсин", new Product { CoutProduct = 50, Price = 20});
+            shop.NewProduct("Апельсин", new Product { CoutProduct = 50, Price = 20 });
             Assert.IsTrue(shop.ContainsProduct("Апельсин"));
 
         }
