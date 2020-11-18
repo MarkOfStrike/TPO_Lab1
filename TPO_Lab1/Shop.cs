@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TPO_Lab1
 {
@@ -66,9 +67,22 @@ namespace TPO_Lab1
         /// <param name="count">Количество</param>
         public void Bringing(string name, int count)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            if (!Products.ContainsKey(name))
+                throw new Exception("Товара не существует");
+
+            if (count < 1)
+                throw new Exception("Необходимо добавить больше одной еденицы товара");
+
             var product = Products[name];
             product.CoutProduct += count;
             Products[name] = product;
+
+
+
+
         }
 
         /// <summary>
@@ -78,6 +92,15 @@ namespace TPO_Lab1
         /// <param name="newPrice">Новая цена</param>
         public void ChangePrice(string name, int newPrice)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            if (!Products.ContainsKey(name))
+                throw new Exception("Товара не существует");
+
+            if (newPrice < 0)
+                throw new Exception("Цена не может быть отрицательной");
+
             var product = Products[name];
             product.Price = newPrice;
             Products[name] = product;
@@ -90,6 +113,12 @@ namespace TPO_Lab1
         /// <returns>Количество проданного товара</returns>
         public int HowManySold(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            if (!Products.ContainsKey(name))
+                throw new Exception("Товара не существует");
+
             return HowSold[name].CoutProduct;
         }
 
@@ -100,6 +129,12 @@ namespace TPO_Lab1
         /// <returns>Общая сумма проданной продукции</returns>
         public int HowMuchSold(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            if (!Products.ContainsKey(name))
+                throw new Exception("Товара не существует");
+
             return HowSold[name].Price;
         }
 
@@ -108,14 +143,19 @@ namespace TPO_Lab1
         /// </summary>
         /// <param name="name">Наименование продукта</param>
         /// <param name="product">Продукт</param>
-        public void NewProduct(string name, Product product)
+        public void NewProduct(string name, Product? product)
         {
-            if (!Products.ContainsKey(name))
-            {
-                Products.Add(name, product);
-                HowSold.Add(name, new Product {CoutProduct = 0, Price=0 });
-            }
-                
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (Products.ContainsKey(name))
+                throw new Exception("Товар уже существует");
+
+            Products.Add(name, (Product)product);
+            HowSold.Add(name, new Product { CoutProduct = 0, Price = 0 });
+
         }
 
         /// <summary>
@@ -124,12 +164,15 @@ namespace TPO_Lab1
         /// <param name="name">Наименование товара</param>
         public void DeleteProduct(string name)
         {
-            if (Products.ContainsKey(name))
-            {
-                Products.Remove(name);
-                HowSold.Remove(name);
-            }
-                
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (!Products.ContainsKey(name))
+                throw new Exception("Товар не существует");
+
+            Products.Remove(name);
+            HowSold.Remove(name);
+
         }
 
         /// <summary>
@@ -137,9 +180,9 @@ namespace TPO_Lab1
         /// </summary>
         /// <param name="name">Наименование товара</param>
         /// <returns>Количество оставшегося товара</returns>
-        public Product Remainder(string name)
+        public Product? Remainder(string name)
         {
-            return Products[name];
+            return Products.ContainsKey(name) ? (Product?)Products[name] : null;
         }
 
         /// <summary>
@@ -149,6 +192,9 @@ namespace TPO_Lab1
         /// <returns>существует ли товар</returns>
         public bool ContainsProduct(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
             return Products.ContainsKey(name);
         }
 
@@ -157,7 +203,7 @@ namespace TPO_Lab1
     /// <summary>
     /// Продукт
     /// </summary>
-    public struct Product
+    public struct Product 
     {
         public int CoutProduct;
         public int Price;
