@@ -8,20 +8,16 @@ namespace TPO_Lab1
         /// <summary>
         /// Имеющиеся продукты
         /// </summary>
-        private Dictionary<string, Product> Products { get; set; }
+        private Dictionary<string, Product> _products { get; set; }
 
-        /// <summary>
-        /// Отчет по продажам
-        /// </summary>
-        private Dictionary<string, Product> HowSold { get; set; }
+        public IReadOnlyDictionary<string, Product> GetAllProducts => _products;
 
         /// <summary>
         /// Инициализация всех продуктов 
         /// </summary>
         public Shop()
         {
-            Products = new Dictionary<string, Product>();
-            HowSold = new Dictionary<string, Product>();
+            _products = new Dictionary<string, Product>();
         }
 
         /// <summary>
@@ -32,28 +28,30 @@ namespace TPO_Lab1
         /// <returns>Результат покупки</returns>
         public int Buy(string name, int count)
         {
-            if (!Products.ContainsKey(name))
+            if (string.IsNullOrEmpty(name))
             {
-                return -1;
+                throw new Exception("Наименование товара не может быть пустым");
             }
 
-            var product = Products[name];
+            if (!_products.ContainsKey(name))
+            {
+                throw new Exception("Товар отсутствует");
+            }
+
+            var product = _products[name];
 
             int price = product.Price * count;
 
-            if (product.CoutProduct < count)
+            if (product.CountProduct < count)
             {
-                return 0;
+                throw new Exception("Такого количества товара нет");
             }
             else
             {
-                product.CoutProduct -= count;
-                Products[name] = product;
-
-                var soldProd = HowSold[name];
-                soldProd.CoutProduct += count;
-                soldProd.Price += price;
-                HowSold[name] = soldProd;
+                product.CountProduct -= count;
+                product.HowMany += count;
+                product.HowMuch += price;
+                _products[name] = product;
 
                 return price;
             }
@@ -68,20 +66,17 @@ namespace TPO_Lab1
         public void Bringing(string name, int count)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+                throw new Exception("Название товара отсутствует");
 
-            if (!Products.ContainsKey(name))
+            if (!_products.ContainsKey(name))
                 throw new Exception("Товара не существует");
 
             if (count < 1)
                 throw new Exception("Необходимо добавить больше одной еденицы товара");
 
-            var product = Products[name];
-            product.CoutProduct += count;
-            Products[name] = product;
-
-
-
+            var product = _products[name];
+            product.CountProduct += count;
+            _products[name] = product;
 
         }
 
@@ -93,17 +88,17 @@ namespace TPO_Lab1
         public void ChangePrice(string name, int newPrice)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+                throw new Exception("Название товара отсутствует");
 
-            if (!Products.ContainsKey(name))
+            if (!_products.ContainsKey(name))
                 throw new Exception("Товара не существует");
 
             if (newPrice < 0)
                 throw new Exception("Цена не может быть отрицательной");
 
-            var product = Products[name];
+            var product = _products[name];
             product.Price = newPrice;
-            Products[name] = product;
+            _products[name] = product;
         }
 
         /// <summary>
@@ -114,12 +109,12 @@ namespace TPO_Lab1
         public int HowManySold(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+                throw new Exception("Название товара отсутствует");
 
-            if (!Products.ContainsKey(name))
+            if (!_products.ContainsKey(name))
                 throw new Exception("Товара не существует");
 
-            return HowSold[name].CoutProduct;
+            return _products[name].HowMany;
         }
 
         /// <summary>
@@ -130,12 +125,12 @@ namespace TPO_Lab1
         public int HowMuchSold(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+                throw new Exception("Название товара отсутствует");
 
-            if (!Products.ContainsKey(name))
+            if (!_products.ContainsKey(name))
                 throw new Exception("Товара не существует");
 
-            return HowSold[name].Price;
+            return _products[name].HowMuch;
         }
 
         /// <summary>
@@ -143,19 +138,15 @@ namespace TPO_Lab1
         /// </summary>
         /// <param name="name">Наименование продукта</param>
         /// <param name="product">Продукт</param>
-        public void NewProduct(string name, Product? product)
+        public void NewProduct(string name, Product product)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+                throw new Exception("Название товара отсутствует");
 
-            if (Products.ContainsKey(name))
+            if (_products.ContainsKey(name))
                 throw new Exception("Товар уже существует");
 
-            Products.Add(name, (Product)product);
-            HowSold.Add(name, new Product { CoutProduct = 0, Price = 0 });
-
+            _products.Add(name, product);
         }
 
         /// <summary>
@@ -164,14 +155,13 @@ namespace TPO_Lab1
         /// <param name="name">Наименование товара</param>
         public void DeleteProduct(string name)
         {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrEmpty(name))
+                throw new Exception("Название товара отсутствует");
 
-            if (!Products.ContainsKey(name))
+            if (!_products.ContainsKey(name))
                 throw new Exception("Товар не существует");
 
-            Products.Remove(name);
-            HowSold.Remove(name);
+            _products.Remove(name);
 
         }
 
@@ -180,9 +170,26 @@ namespace TPO_Lab1
         /// </summary>
         /// <param name="name">Наименование товара</param>
         /// <returns>Количество оставшегося товара</returns>
-        public Product? Remainder(string name)
+        public int GetRemainder(string name)
         {
-            return Products.ContainsKey(name) ? (Product?)Products[name] : null;
+            if (string.IsNullOrEmpty(name))
+                throw new Exception("Название товара отсутствует");
+
+            if (!_products.ContainsKey(name))
+                throw new Exception("Товар не существует");
+
+            return _products[name].CountProduct;
+        }
+
+        public int GetPriceProduct(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new Exception("Название товара отсутствует");
+
+            if (!_products.ContainsKey(name))
+                throw new Exception("Товар не существует");
+
+            return _products[name].Price;
         }
 
         /// <summary>
@@ -193,20 +200,34 @@ namespace TPO_Lab1
         public bool ContainsProduct(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+                throw new Exception("Название товара отсутствует");
 
-            return Products.ContainsKey(name);
+            return _products.ContainsKey(name);
         }
 
+        /// <summary>
+        /// Вся информация о товаре
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public (string Name, Product Product) GetProduct(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new Exception("Название товара отсутствует");
+
+            if (!_products.ContainsKey(name))
+                throw new Exception("Товар не существует");
+
+            return (name, _products[name]);
+        }
     }
 
-    /// <summary>
-    /// Продукт
-    /// </summary>
-    public struct Product 
+    public struct Product
     {
-        public int CoutProduct;
+        public int CountProduct;
         public int Price;
+        public int HowMany;
+        public int HowMuch;
 
     }
 }
