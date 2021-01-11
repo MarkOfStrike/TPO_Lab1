@@ -38,6 +38,11 @@ namespace TPO_Lab1
                 throw new Exception("Товар отсутствует");
             }
 
+            if (count <= 0)
+            {
+                throw new Exception("Такое количество невозможно купить, количество меньше или равно 0");
+            }
+
             var product = _products[name];
 
             int price = product.Price * count;

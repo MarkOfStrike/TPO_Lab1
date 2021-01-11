@@ -48,6 +48,8 @@ namespace TPO_Lab1
         [Test]
         public void TestNotBuy()
         {
+            Assert.That(Assert.Throws<Exception>(() => shop.Buy("Майонез", -2)).Message, Is.EqualTo("Такое количество невозможно купить, количество меньше или равно 0"));
+
             Assert.That(Assert.Throws<Exception>(() => shop.Buy("dsadfasdf", 100)).Message, Is.EqualTo("Товар отсутствует"));//Не существующий товар
             Assert.That(Assert.Throws<Exception>(() => shop.Buy("Майонез", 6473)).Message, Is.EqualTo("Такого количества товара нет"));//Мало товара
             Assert.That(Assert.Throws<Exception>(() => shop.Buy("", 100)).Message, Is.EqualTo("Наименование товара не может быть пустым")); //Вообще не передали ничего
