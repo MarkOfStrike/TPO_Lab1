@@ -49,6 +49,7 @@ namespace TPO_Lab1
         public void TestNotBuy()
         {
             Assert.That(Assert.Throws<Exception>(() => shop.Buy("Майонез", -2)).Message, Is.EqualTo("Такое количество невозможно купить, количество меньше или равно 0"));
+            Assert.That(Assert.Throws<Exception>(() => shop.Buy("Майонез", 0)).Message, Is.EqualTo("Такое количество невозможно купить, количество меньше или равно 0"));
 
             Assert.That(Assert.Throws<Exception>(() => shop.Buy("dsadfasdf", 100)).Message, Is.EqualTo("Товар отсутствует"));//Не существующий товар
             Assert.That(Assert.Throws<Exception>(() => shop.Buy("Майонез", 6473)).Message, Is.EqualTo("Такого количества товара нет"));//Мало товара
@@ -68,6 +69,7 @@ namespace TPO_Lab1
 
             Assert.That(Assert.Throws<Exception>(() => shop.Bringing("23", 1)).Message, Is.EqualTo("Товара не существует"));//Не существующий товар
             Assert.That(Assert.Throws<Exception>(() => shop.Bringing("Хлеб", 0)).Message, Is.EqualTo("Необходимо добавить больше одной еденицы товара"));//Мало товара
+            Assert.That(Assert.Throws<Exception>(() => shop.Bringing("Хлеб", -1)).Message, Is.EqualTo("Необходимо добавить больше одной еденицы товара"));//Мало товара
             Assert.That(Assert.Throws<Exception>(() => shop.Bringing(null, 1)).Message, Is.EqualTo("Название товара отсутствует")); //Вообще не передали ничего
 
             Assert.AreEqual(35, shop.GetRemainder("Хлеб")); //Остаток товара на складе
@@ -92,7 +94,8 @@ namespace TPO_Lab1
 
             Assert.AreEqual(500, shop.GetPriceProduct("Вино"));
 
-
+            Assert.DoesNotThrow(() => { shop.ChangePrice("Вино", 0); });
+            Assert.AreEqual(0, shop.GetPriceProduct("Вино"));
         }
 
         /// <summary>
