@@ -39,6 +39,6 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    testAssemblyVer2: 'TPO_Lab1/TPO_Lab1/ShopTest.cs'
+    testAssemblyVer2: 'TPO_Lab1/ShopTest.cs'
     
 
