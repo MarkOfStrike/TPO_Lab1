@@ -40,5 +40,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     testAssemblyVer2: 'TPO_Lab1/ShopTest.cs'
+    vstestLocationMethod: location
     
 
