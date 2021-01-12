@@ -17,21 +17,26 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '5.8.0'
+    checkLatest: true
 - task: NuGetCommand@2
   inputs:
-    restoreSolution: '$(solution)'
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+
 
 # .NET Desktop
 - task: VSBuild@1
   inputs:
     solution: '**\*.sln'
-    vsVersion: '16.0'
     platform: 'Any CPU'
     configuration: 'Release'
-    msbuildArchitecture: 'x64'
 
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    testSelector: testRun
+
