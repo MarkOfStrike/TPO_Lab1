@@ -44,6 +44,6 @@ steps:
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '.trx'
-    searchFolder: '$(Build.ArtifactStagingDirectory)'
+    searchFolder: 'D:\a\_temp\TestResults\'
     
 
