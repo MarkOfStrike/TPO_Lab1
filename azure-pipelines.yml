@@ -40,4 +40,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     testFiltercriteria: 'ShopTest.cs'
+    testRunTitle: 'ShopTest.cs'
+    
 
