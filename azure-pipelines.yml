@@ -43,7 +43,7 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '.trx'
+    testResultsFiles: '*.trx'
     searchFolder: 'D:\a\_temp\TestResults\'
     
 
