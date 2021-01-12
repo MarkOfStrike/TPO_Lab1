@@ -37,8 +37,6 @@ steps:
 
 - task: VSTest@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
     testAssemblyVer2: 'TPO_Lab1/ShopTest.cs'
     vstestLocationMethod: version
     
