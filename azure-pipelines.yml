@@ -40,6 +40,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     testAssemblyVer2: 'TPO_Lab1/ShopTest.cs'
-    searchFolder: '$(System.DefaultWorkingDirectory)/packages'
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '.trx'
+    searchFolder: '$(Build.ArtifactStagingDirectory)'
     
 
