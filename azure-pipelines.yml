@@ -38,8 +38,7 @@ steps:
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)\*\ShopTest.cs'
-    testFiltercriteria: 'ShopTest.cs'
-    testRunTitle: 'ShopTest.cs'
+    configuration: '$(buildConfiguration)'
+    testAssemblyVer2: 'ShopTest.cs'
     
 
