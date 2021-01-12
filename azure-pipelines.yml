@@ -35,15 +35,23 @@ steps:
     platform: 'Any CPU'
     configuration: 'Release'
 
+
+
 - task: VSTest@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    testSelector: 'testAssemblies'
     testAssemblyVer2: 'TPO_Lab1/ShopTest.cs'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    runOnlyImpactedTests: false
+    pathtoCustomTestAdapters: 'packages\NUnit3TestAdapter.3.17.0'
+    runInParallel: true
+    codeCoverageEnabled: false
+    platform: 'Any CPU'
+    configuration: 'Release'
+
+
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '*.trx'
     searchFolder: 'D:\a\_temp\TestResults\'
-    
-
