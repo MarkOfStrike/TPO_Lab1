@@ -39,4 +39,5 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    testFiltercriteria: 'ShopTest.cs'
 
